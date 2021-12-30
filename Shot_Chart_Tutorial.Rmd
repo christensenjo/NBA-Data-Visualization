@@ -3,8 +3,16 @@ title: "Shot_Chart_Tutorial"
 output: html_document
 ---
 
+```{r}
+Sys.getenv("HOME")
+update.packages(checkBuilt=TRUE, ask=FALSE)
+# Sys.write("make")
+```
+
 # Packages
 ```{r}
+# install.packages("Rtools")
+# library(Rtools)
 install.packages("ggplot2")
 library(ggplot2)
 install.packages("tidyverse")
