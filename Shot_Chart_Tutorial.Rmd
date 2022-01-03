@@ -4,27 +4,32 @@ output: html_document
 ---
 
 ```{r}
-Sys.getenv("HOME")
-update.packages(checkBuilt=TRUE, ask=FALSE)
+# Sys.getenv("HOME")
+# update.packages(checkBuilt=TRUE, ask=FALSE)
 # Sys.write("make")
 ```
 
 # Packages
 ```{r}
-# install.packages("Rtools")
-# library(Rtools)
 install.packages("ggplot2")
 library(ggplot2)
 install.packages("tidyverse")
 library(tidyverse)
-install.packages("nbastatR")
-library(nbastatR)
+
+# NBA DATA
+devtools::install_github("abresler/nbastatR")
+library("nbastatR")
+# install.packages("nbastatR")
+# library(nbastatR)
+
 install.packages("devtools")
 library(devtools)
 devtools::install_github("lbenz730/ncaahoopR")
 library(ncaahoopR)
 install.packages("extrafont")
 library(extrafont)
+font_import()
+loadfonts(device="postscript")
 install.packages("cowplot")
 library(cowplot)
 ```
@@ -82,11 +87,20 @@ court_themes = list(
     missed = '#f8766d',
     hex_border_size = 0,
     hex_border_color = "gray20"
+),
+  paper = list(
+    court = 'cornsilk',
+    lines = 'black',
+    text = '#2c3a5c',
+    made = '#40cc27',
+    missed = '#db1212',
+    hex_border_size = 0,
+    hex_border_color = "gray20"
 )
 )
 
 # Function to create court based on given dimensions
-plot_court = function(court_theme = court_themes$light, use_short_three = FALSE) {
+plot_court = function(court_theme = court_themes$paper, use_short_three = FALSE) {
   if (use_short_three) {
     three_point_radius = 22
     three_point_side_height = 0
@@ -167,7 +181,7 @@ plot_court = function(court_theme = court_themes$light, use_short_three = FALSE)
     theme_minimal(base_size = 22) +
     theme(
       text = element_text(color = court_theme$text),
-      plot.background = element_rect(fill = 'gray20', color = 'gray20'),
+      plot.background = element_rect(fill = 'cornsilk', color = 'cornsilk'),
       panel.background = element_rect(fill = court_theme$court, color = court_theme$court),
       panel.grid = element_blank(),
       panel.border = element_blank(),
@@ -186,7 +200,12 @@ plot_court = function(court_theme = court_themes$light, use_short_three = FALSE)
 # NBA Data
 ```{r}
 # Grab team names to type into teams_shots function
-nba_teams() %>% filter(isNonNBATeam == 0)
+# Sys.getenv("VROOM_CONNECTION_SIZE")
+# nbastatR::nba_teams()
+# get_data_all_nba_teams(return_message=TRUE)
+# nba_teams() %>% filter(isNonNBATeam == 0)
+allNBATeams <- all_nba_teams()
+nbaTeamDict <- nba_teams() %>% filter(isNonNBATeam == 0)
 
 # Grab team shot data
 nets <- teams_shots(teams = "Brooklyn Nets", seasons = 2021, season_types = "Playoffs")
@@ -204,27 +223,31 @@ final_durant <- durant %>% filter(dateGame == 20210615)
 
 # NBA Chart
 ```{r}
-p1 <- plot_court(court_themes$ppt, use_short_three = F) +
+p1 <- plot_court(court_themes$paper, use_short_three = F) +
   geom_point(data = final_durant, aes(x = x, y = y, color = final_durant$isShotMade, fill = final_durant$isShotMade), 
-             size =3, shape = 21, stroke = .5) +  
+             size =3, shape = 0, stroke = .5) +  
+  # below line is made shots display
   scale_color_manual(values = c("green4","red3"), aesthetics = "color", breaks=c("TRUE", "FALSE"), labels=c("Made", "Missed")) +
-  scale_fill_manual(values = c("green2","gray20"), aesthetics = "fill", breaks=c("TRUE", "FALSE"), labels=c("Made", "Missed")) +
+  # below line is missed shots display
+  scale_fill_manual(values = c("green2","red3"), aesthetics = "fill", breaks=c("TRUE", "FALSE"), labels=c("Made", "Missed")) +
   scale_x_continuous(limits = c(-27.5, 27.5)) +
   scale_y_continuous(limits = c(0, 45)) +
   theme(plot.title = element_text(hjust = .5, size = 22, family = "Comic Sans MS", face = "bold", vjust = -4),
         plot.subtitle = element_text(hjust = .5, size = 10, family = "Comic Sans MS", face = "bold", vjust = -8),
+        # LEGEND
         legend.position = c(.5, .85),
         legend.direction = "horizontal",
         legend.title = element_blank(),
-        legend.text = element_text(hjust = .5, size = 10, family = "Comic Sans MS", face = "bold", colour = "white"),
-        plot.caption = element_text(hjust = .5, size = 6, family = "Comic Sans MS", face = "bold", colour = "lightgrey", vjust = 8)) +
+        legend.text = element_text(hjust = .5, size = 10, family = "Comic Sans MS", face = "bold", colour = "#2c3a5c"),
+        plot.caption = element_text(hjust = .5, size = 6, family = "Comic Sans MS", face = "bold", colour = "#2c3a5c", vjust = 8)) +
+  # Title
   ggtitle(label = "Kevin Durant vs. Milwaukee",
-          subtitle = "49 PTS | 17 REB | 10 AST | 4-9 3PT - 6/15/21") +
-  labs(caption = "Tutorial: @DSamangy")
+          subtitle = "49 PTS | 17 REB | 10 AST | 4-9 3PT - 6/15/21") 
+# + labs(caption = "Tutorial: @DSamangy")
 
-ggdraw(p1) + theme(plot.background = element_rect(fill="gray20", color = NA)) 
+ggdraw(p1) + theme(plot.background = element_rect(fill="cornsilk", color = NA)) 
 
-#ggsave("Durant.png", height = 6, width = 6, dpi = 300)
+ggsave("Durant.png", height = 6, width = 6, dpi = 300)
 ```
 
 # NCAA Data
