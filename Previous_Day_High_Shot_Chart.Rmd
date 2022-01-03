@@ -1,13 +1,7 @@
 ---
-title: "Shot_Chart_Tutorial"
+title: "Previous_Day_High_Shot_Chart"
 output: html_document
 ---
-
-```{r}
-# Sys.getenv("HOME")
-# update.packages(checkBuilt=TRUE, ask=FALSE)
-# Sys.write("make")
-```
 
 # Packages
 ```{r}
@@ -15,13 +9,8 @@ install.packages("ggplot2")
 library(ggplot2)
 install.packages("tidyverse")
 library(tidyverse)
-
-# NBA DATA
-devtools::install_github("abresler/nbastatR")
+devtools::install_github("abresler/nbastatR") # NBA DATA
 library("nbastatR")
-# install.packages("nbastatR")
-# library(nbastatR)
-
 install.packages("devtools")
 library(devtools)
 devtools::install_github("lbenz730/ncaahoopR")
@@ -197,18 +186,29 @@ plot_court = function(court_theme = court_themes$paper, use_short_three = FALSE)
 }
 ```
 
+```{r}
+todays_date <- Sys.Date()
+print(todays_date)
+comps <- strsplit(as.character(todays_date), "-")
+print(comps)
+newDate <- paste(comps, "")
+print(newDate)
+```
+
 # NBA Data
 ```{r}
 # Grab team names to type into teams_shots function
-# Sys.getenv("VROOM_CONNECTION_SIZE")
-# nbastatR::nba_teams()
-# get_data_all_nba_teams(return_message=TRUE)
-# nba_teams() %>% filter(isNonNBATeam == 0)
 allNBATeams <- all_nba_teams()
 nbaTeamDict <- nba_teams() %>% filter(isNonNBATeam == 0)
 
 # Grab team shot data
-nets <- teams_shots(teams = "Brooklyn Nets", seasons = 2021, season_types = "Playoffs")
+team_names <- c("Atlanta Hawks", "Boston Celtics", "Brooklyn Nets", "Charlotte Hornets", "Chicago Bulls", "Cleveland Cavaliers",
+"Dallas Mavericks", "Denver Nuggets", "Detroit Pistons", "Golden State Warriors", "Houston Rockets", "Indiana Pacers", "Los Angeles Clippers",
+"Los Angeles Lakers", "Memphis Grizzlies", "Miami Heat", "Milwaukee Bucks", "Minnesota Timberwolves", "New Orleans Pelicans", "New York Knicks",
+"Oklahoma City Thunder", "Orlando Magic", "Philadelphia 76ers", "Phoenix Suns", "Portland Trail Blazers", "Sacramento Kings", "San Antonio Spurs", "Toronto Raptors", "Utah Jazz", "Washington Wizards")
+
+
+all_shots <- teams_shots(teams = team_names, seasons = 2022, season_types = "Regular", date_from=newDate)
 
 # Filter shot data for player & clean data to fit court dimensions
 durant <- nets %>% filter(namePlayer=="Kevin Durant") %>% 

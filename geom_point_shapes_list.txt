@@ -1,0 +1,16 @@
+geom_point aesthetics shapes
+
+1-14 = lined shapes of various
+15: filled squares
+16: filled circles
+17: filled triangles
+18: filled diamonds
+19: filled circles?
+20: filled smaller circles
+21: filled larger circles which borders
+22: filled larger sqaures with borders
+23: filled larger diamonds with borders
+24: "" 			triangles 		""
+25: "" 		upside down triangles ""
+26: nothing
+27: 
