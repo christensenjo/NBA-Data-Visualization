@@ -9,7 +9,7 @@ This repository is forked from @DomSamangy. I will add my own work here as I exp
 
 Most of my work so far has been exploratory, but I am currently working on a project to generate daily point total high shot charts. 
 #### Daily Point Total Shot Charts
-Eventually I hope to deploy this as an algorithm that can be run daily. Once working, it should display the shot chart for whichever player had the highest point total the prior day.
+Eventually I hope to deploy this as an algorithm that can be run daily. Once working, it should display the shot chart for whichever player had the highest point total the prior day. This work can be found in the file [Previous_Day_High_Shot_Chart](Previous_Day_High_Shot_Chart.Rmd).
 
 @christensenjo
 
