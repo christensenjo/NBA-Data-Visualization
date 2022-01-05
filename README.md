@@ -13,6 +13,7 @@ Eventually I hope to deploy this as an algorithm that can be run daily. Once wor
 
 @christensenjo
 
+<em>Following README from original fork:</em>
 ---------------------------
 
 # R_Tutorials
