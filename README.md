@@ -1,5 +1,17 @@
+
+# Visualizing NBA Data
+
+### Credit where its due
+
 This repository is forked from @DomSamangy. I will add my own work here as I experiment with different NBA data visualization techniques in R.
-- Joel
+
+### My efforts so far
+
+Most of my work so far has been exploratory, but I am currently working on a project to generate daily point total high shot charts. 
+#### Daily Point Total Shot Charts
+Eventually I hope to deploy this as an algorithm that can be run daily. Once working, it should display the shot chart for whichever player had the highest point total the prior day.
+
+@christensenjo
 
 ---------------------------
 
