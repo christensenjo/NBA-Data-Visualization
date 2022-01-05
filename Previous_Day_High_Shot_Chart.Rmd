@@ -21,6 +21,7 @@ font_import()
 loadfonts(device="postscript")
 install.packages("cowplot")
 library(cowplot)
+library(stringr)
 ```
 
 # Creating Court 
@@ -187,12 +188,22 @@ plot_court = function(court_theme = court_themes$paper, use_short_three = FALSE)
 ```
 
 ```{r}
-todays_date <- Sys.Date()
-print(todays_date)
-comps <- strsplit(as.character(todays_date), "-")
+# Get yesterdays date
+yesterdays_date <- Sys.Date()-1
+print(yesterdays_date)
+comps <- strsplit(as.character(yesterdays_date), "-")
 print(comps)
 newDate <- paste(comps, "")
 print(newDate)
+
+# Convert today's date to simple string (I'm sure there are better ways of doing this, but this worked for me)
+concatDate <- sapply(newDate, function(x) paste(x[1:2], collapse=""))
+print(concatDate)
+finalDate <- gsub("[^0-9.-]", "", concatDate)
+print(finalDate)
+
+print(as.numeric(finalDate))
+
 ```
 
 # NBA Data
@@ -202,13 +213,14 @@ allNBATeams <- all_nba_teams()
 nbaTeamDict <- nba_teams() %>% filter(isNonNBATeam == 0)
 
 # Grab team shot data
-team_names <- c("Atlanta Hawks", "Boston Celtics", "Brooklyn Nets", "Charlotte Hornets", "Chicago Bulls", "Cleveland Cavaliers",
-"Dallas Mavericks", "Denver Nuggets", "Detroit Pistons", "Golden State Warriors", "Houston Rockets", "Indiana Pacers", "Los Angeles Clippers",
-"Los Angeles Lakers", "Memphis Grizzlies", "Miami Heat", "Milwaukee Bucks", "Minnesota Timberwolves", "New Orleans Pelicans", "New York Knicks",
-"Oklahoma City Thunder", "Orlando Magic", "Philadelphia 76ers", "Phoenix Suns", "Portland Trail Blazers", "Sacramento Kings", "San Antonio Spurs", "Toronto Raptors", "Utah Jazz", "Washington Wizards")
+# team_names <- c("Atlanta Hawks", "Boston Celtics", "Brooklyn Nets", "Charlotte Hornets", "Chicago Bulls", "Cleveland Cavaliers",
+# "Dallas Mavericks", "Denver Nuggets", "Detroit Pistons", "Golden State Warriors", "Houston Rockets", "Indiana Pacers", "Los Angeles Clippers",
+# "Los Angeles Lakers", "Memphis Grizzlies", "Miami Heat", "Milwaukee Bucks", "Minnesota Timberwolves", "New Orleans Pelicans", "New York Knicks",
+# "Oklahoma City Thunder", "Orlando Magic", "Philadelphia 76ers", "Phoenix Suns", "Portland Trail Blazers", "Sacramento Kings", "San Antonio Spurs", "Toronto Raptors", "Utah Jazz", "Washington Wizards")
 
 
-all_shots <- teams_shots(teams = team_names, seasons = 2022, season_types = "Regular", date_from=newDate)
+all_shots <- teams_shots(all_active_teams = T, seasons = 2022, season_types = "Regular Season", date_from = as.numeric(finalDate), date_to = as.numeric(finalDate))
+yesterday_shots <- all_shots %>% filter(dateGame == as.numeric(finalDate))
 
 # Filter shot data for player & clean data to fit court dimensions
 durant <- nets %>% filter(namePlayer=="Kevin Durant") %>% 
